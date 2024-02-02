@@ -14,6 +14,9 @@
 #include "LCD_1in8.h"
 #include "DEV_Config.h"
 
+#include "ThermistorAgent.h"
+#include "PushButtonAgent.h"
+
 const unsigned char *previousBluetoothImage;
 const unsigned char *previousPlatformImage;
 const unsigned char *previousAutoPilotImage;
@@ -53,8 +56,19 @@ uint8_t TriggerModeX = 0;
 uint8_t TriggerModeY = 0;
 uint8_t BatteryX = 0;
 uint8_t BatteryY = 0;
+
 uint8_t SystemTextX = 0;
 uint8_t SystemTextY = 0;
+
+uint8_t TempMeasurementX = 0;
+uint8_t TempMeasurementY = 0;
+
+uint8_t SetPointTextX = 0;
+uint8_t SetPointTextY = 0;
+
+uint8_t SetPointValueX = 0;
+uint8_t SetPointValueY = 0;
+
 uint8_t SafeAirBatteryX = 0;
 uint8_t SafeAirBatteryY = 0;
 uint8_t Parachute1X = 0;
@@ -98,7 +112,7 @@ void screenInit(void)
 {
 	isPortrait = true;
 	DEV_Module_Init();
-	LCD_1IN8_SetBackLight(1000);
+	LCD_1IN8_SetBackLight(20000);
 
 	if (isPortrait)
 	{
@@ -181,13 +195,23 @@ void centeredString(UWORD XCenterstart, UWORD Ystart, const char * pString, uint
 
 void screenUpdate(bool drawDeltaImage)
 {
+	char localText[17] = "";
 //	numberOfDisplayedSafeAirIcons = 1 * isAutoPilotDisplayed + 1 * isPlatformDisplayed +
 //			1 * isTriggerModeDisplayed + 1 * isSafeAirBatteryDisplayed;
-//	setIconPositionOnScreen();
+	setIconPositionOnScreen();
 	if ( (!isMenuDisplayed) && (!isPopupDisplayed) )
 	{
 		createEmptyFrame(false);
 		//TODO: Draw data to screen
+		centeredString(SystemTextX, SystemTextY, "Temp Readings:", BLACK, BACKGROUND, 16, Font12);
+
+		sprintf(localText, "%3ld %3ld %3ld", thermistorsTemperature[0], thermistorsTemperature[1], thermistorsTemperature[2]);
+		centeredString(TempMeasurementX, TempMeasurementY, localText, BLACK, BACKGROUND, 16, Font12);
+
+		centeredString(SetPointTextX, SetPointTextY, "Set Point:", BLACK, BACKGROUND, 16, Font12);
+
+		sprintf(localText, "%3ld %3ld", setPointValue[0], setPointValue[1]);
+		centeredString(SetPointValueX, SetPointValueY, localText, BLACK, BACKGROUND, 16, Font12);
 	}
 	else if (isMenuDisplayed)
 	{
@@ -438,8 +462,17 @@ void setIconPositionOnScreen(void)
 //		SystemStatusTextX = VerticalSystemStatusTextX;
 //		SystemStatusTextY = VerticalSystemStatusTextY;
 //
-//		SystemTextX = VerticalSystemTextX;
-//		SystemTextY = VerticalSystemTextY;
+		SystemTextX = VerticalSystemTextX;
+		SystemTextY = VerticalSystemTextY;
+
+		TempMeasurementX = VerticalTempMeasurementX;
+		TempMeasurementY = VerticalTempMeasurementY;
+
+		SetPointTextX = VerticalSetPointTextX;
+		SetPointTextY = VerticalSetPointTextY;
+
+		SetPointValueX = VerticalSetPointValueX;
+		SetPointValueY = VerticalSetPointValueY;
 //
 //		WarningTextX = VerticalWarningTextX;
 //		WarningTextY = VerticalWarningTextY;

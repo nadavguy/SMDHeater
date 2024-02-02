@@ -100,7 +100,17 @@
 #define VerticalLogoX 0
 #define VerticalLogoY 0
 
+#define VerticalSystemTextX VerticalDisplayCenterWidth
+#define VerticalSystemTextY 30
 
+#define VerticalTempMeasurementX VerticalDisplayCenterWidth
+#define VerticalTempMeasurementY 30 + 15
+
+#define VerticalSetPointTextX VerticalDisplayCenterWidth
+#define VerticalSetPointTextY 30 + 30
+
+#define VerticalSetPointValueX VerticalDisplayCenterWidth
+#define VerticalSetPointValueY 30 + 45
 
 #define VerticalAltitudeText1X VerticalAltitudeIconX - 5 + 24
 #define VerticalAltitudeText1Y VerticalSafeAirBatteryIconY + 2

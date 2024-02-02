@@ -43,6 +43,9 @@ extern "C" {
 #include "PopupHelper.h"
 #include "fonts.h"
 #include "ScreenAgent.h"
+#include "GeneralMath.h"
+#include "PushButtonAgent.h"
+#include "ThermistorAgent.h"
 /* USER CODE END Includes */
 
 /* Exported types ------------------------------------------------------------*/
@@ -82,6 +85,14 @@ void Error_Handler(void);
 #define GPIO_Screen_DC_GPIO_Port GPIOA
 #define SPI1_MOSI_Screen_Pin GPIO_PIN_7
 #define SPI1_MOSI_Screen_GPIO_Port GPIOA
+#define GPIO_Left_Heater_Down_Pin GPIO_PIN_12
+#define GPIO_Left_Heater_Down_GPIO_Port GPIOB
+#define GPIO_Left_Heater_Up_Pin GPIO_PIN_13
+#define GPIO_Left_Heater_Up_GPIO_Port GPIOB
+#define GPIO_Right_Heater_Down_Pin GPIO_PIN_14
+#define GPIO_Right_Heater_Down_GPIO_Port GPIOB
+#define GPIO_Right_Heater_Up_Pin GPIO_PIN_15
+#define GPIO_Right_Heater_Up_GPIO_Port GPIOB
 #define TIM1_CH1_Heater1PWM_Pin GPIO_PIN_8
 #define TIM1_CH1_Heater1PWM_GPIO_Port GPIOA
 #define TIM1_CH2_Heater2PWM_Pin GPIO_PIN_9

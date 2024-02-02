@@ -19,6 +19,7 @@
 /* Includes ------------------------------------------------------------------*/
 #include "main.h"
 #include "adc.h"
+#include "dma.h"
 #include "spi.h"
 #include "tim.h"
 #include "gpio.h"
@@ -47,7 +48,7 @@
 
 /* USER CODE BEGIN PV */
 float versionID = 1.000;
-float buildID = 1.010;
+float buildID = 1.020;
 
 tCURSOR_DATA currentCursorPosition;
 /* USER CODE END PV */
@@ -91,17 +92,26 @@ int main(void)
 
   /* Initialize all configured peripherals */
   MX_GPIO_Init();
+  MX_DMA_Init();
   MX_TIM1_Init();
   MX_SPI1_Init();
   MX_ADC1_Init();
   /* USER CODE BEGIN 2 */
-
+  TIM1->CCR3 = 20000;
+  screenInit();
+  screenClear();
+  renderCompleteFrame = true;
+  HAL_ADC_Start_DMA(&hadc1, (uint32_t *)&thermistors, 3);
   /* USER CODE END 2 */
 
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
   while (1)
   {
+	  checkButtons();
+	  screenUpdate(false);
+	  displayNextFrame();
+	  HAL_ADC_Start_DMA(&hadc1, (uint32_t *)&thermistors, 3);
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
