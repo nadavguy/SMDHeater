@@ -185,5 +185,7 @@ void HAL_ADC_ConvCpltCallback(ADC_HandleTypeDef* hadc)
 
 	convertVoltageToTemperature();
 
+	newThermistorMeasurementAvailable = true;
+
 }
 /* USER CODE END 1 */

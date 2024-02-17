@@ -13,7 +13,8 @@
 extern uint32_t thermistors[3];
 extern float thermistorsVoltage[3];
 extern float thermistorsResistance[3];
-extern int32_t thermistorsTemperature[3];
+extern float thermistorsTemperature[3];
+extern float filteredThermistorsTemperature[3];
 extern float resistors[3];
 
 extern void convertVoltageToTemperature(void);

@@ -82,7 +82,7 @@ uint8_t WarningIconY = 0;
 uint8_t WarningTextX = 0;
 uint8_t WarningTextY = 0;
 
-uint32_t lastBatteryRefresh = 0;
+uint32_t lastThermistorUpdate = 0;
 uint32_t lastBITStatusChange = 0;
 uint32_t lastFrameDisplayed = 0;
 uint32_t lastFullFrameDisplayed = 0 ;
@@ -205,8 +205,12 @@ void screenUpdate(bool drawDeltaImage)
 		//TODO: Draw data to screen
 		centeredString(SystemTextX, SystemTextY, "Temp Readings:", BLACK, BACKGROUND, 16, Font12);
 
-		sprintf(localText, "%3ld %3ld %3ld", thermistorsTemperature[0], thermistorsTemperature[1], thermistorsTemperature[2]);
-		centeredString(TempMeasurementX, TempMeasurementY, localText, BLACK, BACKGROUND, 16, Font12);
+//		if (HAL_GetTick() - lastThermistorUpdate >= 2 * 1000)
+//		{
+			sprintf(localText, "%3ld %3ld %3ld", (uint32_t)filteredThermistorsTemperature[0], (uint32_t)filteredThermistorsTemperature[1], (uint32_t)filteredThermistorsTemperature[2]);
+			centeredString(TempMeasurementX, TempMeasurementY, localText, BLACK, BACKGROUND, 16, Font12);
+//			lastThermistorUpdate = HAL_GetTick();
+//		}
 
 		centeredString(SetPointTextX, SetPointTextY, "Set Point:", BLACK, BACKGROUND, 16, Font12);
 

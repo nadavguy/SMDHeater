@@ -46,6 +46,8 @@ extern "C" {
 #include "GeneralMath.h"
 #include "PushButtonAgent.h"
 #include "ThermistorAgent.h"
+
+
 /* USER CODE END Includes */
 
 /* Exported types ------------------------------------------------------------*/
@@ -107,6 +109,13 @@ extern float versionID;
 extern float buildID;
 
 extern tCURSOR_DATA currentCursorPosition;
+
+extern bool newThermistorMeasurementAvailable;
+extern uint32_t timer1;
+
+//extern KalmanFilter leftThermistor;
+//extern KalmanFilter middleThermistor;
+//extern KalmanFilter rightThermistor;
 /* USER CODE END Private defines */
 
 #ifdef __cplusplus

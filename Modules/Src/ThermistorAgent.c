@@ -11,7 +11,8 @@
 uint32_t thermistors[3] = {0};
 float thermistorsVoltage[3] = {0};
 float thermistorsResistance[3] = {0};
-int32_t thermistorsTemperature[3] = {0};
+float thermistorsTemperature[3] = {0};
+float filteredThermistorsTemperature[3] = {0};
 float resistors[3] = {4700.0, 4700.0, 4700.0};
 
 float resitanceTable[36] = { 100.0, 81.0, 65.65, 53.5, 43.78, 35.8999, 29.99, 25.0, 20.9, 17.55, 14.76, 12.54, 10.66, 9.1, 7.784, 6.71, 5.85, 5.07, 4.41, 3.85, 3.34, 2.94, 2.58,

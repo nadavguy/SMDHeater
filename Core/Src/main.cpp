@@ -26,7 +26,8 @@
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
-
+#include "KalmanFilter.h"
+#include "PIDController.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -36,7 +37,16 @@
 
 /* Private define ------------------------------------------------------------*/
 /* USER CODE BEGIN PD */
+KalmanFilter leftThermistorKF(0.25, 1, 25, 25);
+KalmanFilter middleThermistorKF(0.25, 1, 25, 25);
+KalmanFilter rightThermistorKF(0.25, 1, 25, 25);
 
+PIDController leftThermistorPID(0.001, 10, 1, 25);
+PIDController middleThermistorPID(0.001, 10, 1, 25);
+PIDController rightThermistorPID(0.001, 10, 1, 25);
+
+bool newThermistorMeasurementAvailable = false;
+uint32_t timer1 = 0;
 /* USER CODE END PD */
 
 /* Private macro -------------------------------------------------------------*/
@@ -48,7 +58,7 @@
 
 /* USER CODE BEGIN PV */
 float versionID = 1.000;
-float buildID = 1.020;
+float buildID = 1.030;
 
 tCURSOR_DATA currentCursorPosition;
 /* USER CODE END PV */
@@ -101,6 +111,8 @@ int main(void)
   screenInit();
   screenClear();
   renderCompleteFrame = true;
+  HAL_TIM_PWM_Start(&htim1, TIM_CHANNEL_1);
+  HAL_TIM_PWM_Start(&htim1, TIM_CHANNEL_2);
   HAL_ADC_Start_DMA(&hadc1, (uint32_t *)&thermistors, 3);
   /* USER CODE END 2 */
 
@@ -109,9 +121,58 @@ int main(void)
   while (1)
   {
 	  checkButtons();
+	  leftThermistorPID.setSP(setPointValue[0]);
+	  middleThermistorPID.setSP( (setPointValue[0] + setPointValue[1])/2.0);
+	  rightThermistorPID.setSP(setPointValue[1]);
+
+	  if (newThermistorMeasurementAvailable)
+	  {
+		  float localLeftThermistor = (float)leftThermistorKF.getFilteredValue(thermistorsTemperature[0]);
+		  float localMiddleThermistor = (float)middleThermistorKF.getFilteredValue(thermistorsTemperature[1]);
+		  float localRightThermistor = (float)rightThermistorKF.getFilteredValue(thermistorsTemperature[2]);
+
+		  filteredThermistorsTemperature[0] = localLeftThermistor;
+		  filteredThermistorsTemperature[1] = localMiddleThermistor;
+		  filteredThermistorsTemperature[2] = localRightThermistor;
+
+		  newThermistorMeasurementAvailable = false;
+		  HAL_ADC_Start_DMA(&hadc1, (uint32_t *)&thermistors, 3);
+	  }
+	  leftThermistorPID.updateCycle((float)filteredThermistorsTemperature[0]);
+	  middleThermistorPID.updateCycle((float)filteredThermistorsTemperature[1]);
+	  rightThermistorPID.updateCycle((float)filteredThermistorsTemperature[2]);
+
+	  uint32_t localLeftThermistorTim = (uint32_t)(TIM1->CCR1 + leftThermistorPID.getOutput());
+	  uint32_t localRightThermistorTim = (uint32_t)(TIM1->CCR2 + rightThermistorPID.getOutput());
+
+	  if (localLeftThermistorTim > 20000)
+	  {
+		  localLeftThermistorTim = 20000;
+	  }
+
+	  if (localLeftThermistorTim < 0)
+	  {
+		  localLeftThermistorTim = 0;
+	  }
+
+    if (localRightThermistorTim > 20000)
+	  {
+		  localRightThermistorTim = 20000;
+	  }
+
+	  if (localRightThermistorTim < 0)
+	  {
+		  localRightThermistorTim = 0;
+	  }
+
+	  TIM1->CCR1 = localLeftThermistorTim;
+	  TIM1->CCR2 = localRightThermistorTim;
+
+	  timer1 = localLeftThermistorTim;
+
+
 	  screenUpdate(false);
 	  displayNextFrame();
-	  HAL_ADC_Start_DMA(&hadc1, (uint32_t *)&thermistors, 3);
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
