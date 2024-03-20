@@ -111,6 +111,7 @@ extern float buildID;
 extern tCURSOR_DATA currentCursorPosition;
 
 extern bool newThermistorMeasurementAvailable;
+extern bool newSetPoint[2];
 extern uint32_t timer1;
 
 //extern KalmanFilter leftThermistor;

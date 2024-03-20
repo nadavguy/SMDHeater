@@ -72,3 +72,9 @@ float PIDController::setSP(float newSP)
 	SetPoint = newSP;
 	return SetPoint;
 }
+
+float PIDController::setIntegralError(float newIntegralError)
+{
+	PreviousIntegral = newIntegralError;
+	return PreviousIntegral;
+}

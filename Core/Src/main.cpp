@@ -46,6 +46,7 @@ PIDController middleThermistorPID(0.001, 10, 1, 25);
 PIDController rightThermistorPID(0.001, 10, 1, 25);
 
 bool newThermistorMeasurementAvailable = false;
+bool newSetPoint[2] = {false};
 uint32_t timer1 = 0;
 /* USER CODE END PD */
 
@@ -58,7 +59,7 @@ uint32_t timer1 = 0;
 
 /* USER CODE BEGIN PV */
 float versionID = 1.000;
-float buildID = 1.030;
+float buildID = 1.040;
 
 tCURSOR_DATA currentCursorPosition;
 /* USER CODE END PV */
@@ -121,9 +122,24 @@ int main(void)
   while (1)
   {
 	  checkButtons();
-	  leftThermistorPID.setSP(setPointValue[0]);
-	  middleThermistorPID.setSP( (setPointValue[0] + setPointValue[1])/2.0);
-	  rightThermistorPID.setSP(setPointValue[1]);
+	  if (newSetPoint[0])
+	  {
+		  leftThermistorPID.setSP(setPointValue[0]);
+		  leftThermistorPID.setIntegralError(0);
+	  }
+
+	  if ((newSetPoint[0]) || newSetPoint[1])
+	  {
+		  middleThermistorPID.setSP( (setPointValue[0] + setPointValue[1])/2.0);
+//		  leftThermistorPID.setIntegralError(0);
+		  middleThermistorPID.setIntegralError(0);
+//		  rightThermistorPID.setIntegralError(0);
+	  }
+	  if (newSetPoint[1])
+	  {
+		  rightThermistorPID.setSP(setPointValue[1]);
+		  rightThermistorPID.setIntegralError(0);
+	  }
 
 	  if (newThermistorMeasurementAvailable)
 	  {
@@ -165,6 +181,11 @@ int main(void)
 		  localRightThermistorTim = 0;
 	  }
 
+	  if ((setPointValue[0] == 25) && (setPointValue[1] == 25))
+	  {
+		  localLeftThermistorTim = 0;
+		  localRightThermistorTim = 0;
+	  }
 	  TIM1->CCR1 = localLeftThermistorTim;
 	  TIM1->CCR2 = localRightThermistorTim;
 

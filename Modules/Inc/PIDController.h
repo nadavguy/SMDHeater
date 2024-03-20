@@ -22,6 +22,7 @@ public:
 	float setKp(float newKp);
 	float setKd(float newKd);
 	float setSP(float newSP);
+	float setIntegralError(float newIntegralError);
 
 	virtual ~PIDController();
 private:

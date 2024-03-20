@@ -24,6 +24,7 @@ void checkButtons(void)
 			localValue = 25;
 		}
 		setPointValue[0] = localValue;
+		newSetPoint[0] = true;
 	}
 	else if ((HAL_GPIO_ReadPin(GPIOB, GPIO_PIN_13) == GPIO_PIN_RESET) && (HAL_GetTick() - lastLeftButtonPressed >= 100))
 	{
@@ -34,6 +35,7 @@ void checkButtons(void)
 			localValue = 200;
 		}
 		setPointValue[0] = localValue;
+		newSetPoint[0] = true;
 	}
 
 	//Right Side
@@ -46,6 +48,7 @@ void checkButtons(void)
 			localValue = 25;
 		}
 		setPointValue[1] = localValue;
+		newSetPoint[1] = true;
 	}
 	else if ((HAL_GPIO_ReadPin(GPIOB, GPIO_PIN_15) == GPIO_PIN_RESET) && (HAL_GetTick() - lastRightButtonPressed >= 100))
 	{
@@ -56,5 +59,6 @@ void checkButtons(void)
 			localValue = 200;
 		}
 		setPointValue[1] = localValue;
+		newSetPoint[1] = true;
 	}
 }
